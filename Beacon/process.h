@@ -7,10 +7,15 @@ struct PROCESSES {
 	DWORD* processes_id;
 };
 
+struct PROCESS_INFO {
+	PPROCESS_INFORMATION pi;
+	HANDLE stdOutRd;
+};
+
 class process
 {
 public:
-	static PPROCESS_INFORMATION create_process(wchar_t cmd[]);
+	static PROCESS_INFO* create_process(wchar_t cmd[]);
 
 	static PPROCESS_INFORMATION create_spoofed_process(wchar_t cmd[], int pid);
 
@@ -19,5 +24,6 @@ public:
 	static LPVOID create_page_process(HANDLE p_handle = NULL, SIZE_T size = 4000);
 
 	static PROCESSES* enumerate_all_processes();
+
 };
 
