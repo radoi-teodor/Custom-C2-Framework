@@ -19,18 +19,72 @@ namespace TeamServer.Menu
 
             AddMenuItem(new MenuItem(1, "Beacons Captured", () => {
                 int idx = 0;
+
+                if (Program.listeners == null || Program.listeners.Count == 0)
+                {
+                    Console.WriteLine("No beacons captured");
+                    Display();
+                    return;
+                }
+
+                List<Beacon> localBeacons = new List<Beacon>();
                 foreach (IListener listener in Program.listeners)
                 {
                     foreach (Beacon beacon in listener.Beacons)
                     {
                         Console.WriteLine(idx.ToString() + ". " + beacon.Id);
+                        localBeacons.Add(beacon);
                         idx++;
                     }
                 }
-            }));
+
+                Console.Write("Interact with (write beacon ID or \"Back\" to return): ");
+                string chosenIdxStr = Console.ReadLine();
+
+                bool couldConvert = true;
+                int chosenIdx = 0;
+
+                try
+                {
+                    chosenIdx = Convert.ToInt32(chosenIdxStr);
+                }
+                catch(Exception e)
+                {
+                    couldConvert = false;
+                }
+
+                if(chosenIdxStr != "Exit" && couldConvert)
+                {
+                    try
+                    {
+                        Console.Clear();
+                        Beacon targetBeacon = localBeacons[chosenIdx];
+
+                        do
+                        {
+                            Console.Write("beacon> ");
+                            string command = Console.ReadLine();
+
+                            if(command != "bg" && command != "background")
+                            {
+                                targetBeacon.InsertCommand(command);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        } while (true);
+                    }catch(Exception e)
+                    {
+                        Console.WriteLine("Beacon with the specified index does not exist");
+                    }
+                }
+
+                Display();
+                return;
+            }, true));
 
             AddMenuItem(new MenuItem(2, "Exit menu").SetAsExitOption());
-
 
             //AddHiddenMenuItem(new MenuItem(3, "Hidden menu item", () => Console.WriteLine("I was a hidden menu item")));
         }
@@ -48,13 +102,25 @@ namespace TeamServer.Menu
         protected override void Init()
         {
             AddMenuItem(new MenuItem(0, "Input IP & Port", () => {
-                Console.WriteLine("Write the listening IP:");
-                string ip = Console.ReadLine().Trim();
+                string ip = "127.0.0.1";
+                int port = 8888;
+                try
+                {
+                    Console.WriteLine();
+                    Console.Write("Write the listening IP: ");
+                    ip = Console.ReadLine().Trim();
 
-                Console.WriteLine();
 
-                Console.WriteLine("Write the listening port:");
-                int port = Convert.ToInt32(Console.ReadLine().Trim());
+                    Console.Write("Write the listening port: ");
+                    port = Convert.ToInt32(Console.ReadLine().Trim());
+                    Console.WriteLine();
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Input a real port");
+                    return;
+                }
 
                 try
                 {

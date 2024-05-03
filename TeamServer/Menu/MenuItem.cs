@@ -16,11 +16,17 @@ namespace TeamServer.Menu
         private readonly AbstractMenu _menu;
         private readonly Action _action;
 
-        public MenuItem(long id, string description = "", Action action = null)
+        public MenuItem(long id, string description = "", Action action = null, bool isExitOption = false)
         {
             Id = id;
             Description = description;
             _action = action;
+
+            if (isExitOption)
+            {
+                IsExitOption = true;
+            }
+
             Show();
         }
 

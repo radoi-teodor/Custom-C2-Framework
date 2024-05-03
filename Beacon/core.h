@@ -1,11 +1,15 @@
 #pragma once
 #include<string>
 #include "Windows.h"
+//#include "Communicator.h"
 
 class core
 {
 
 public:
+	static core* instance;
+	static bool terminated;
+	//static Communicator *communicator;
 	std::string identifier = ""; // this will be the identifier used by teamserver to distinct different beacons
 
 	core();

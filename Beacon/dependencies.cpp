@@ -1,6 +1,9 @@
-#include "Windows.h"
 #include <string>
+#include <nlohmann/json.hpp>
 #include "dependencies.h"
+#include "Windows.h"
+
+using json = nlohmann::json;
 
 std::string dependencies::sanitize_identifier(std::string text) {
 	std::string result = "";
@@ -10,4 +13,11 @@ std::string dependencies::sanitize_identifier(std::string text) {
 		}
 	}
 	return result;
+}
+
+std::vector<std::string> dependencies::deserialize_array(std::string text) {
+	json j = json::parse(text);
+	std::vector<std::string> array;
+	j.get_to(array);
+	return array;
 }
