@@ -7,6 +7,7 @@ namespace TeamServer
     class Program
     {
         public static List<IListener> listeners;
+        public static Beacon communicatingBeacon = null;
 
         public static void Main(string[] args)
         {

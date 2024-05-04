@@ -59,7 +59,8 @@ namespace TeamServer.Menu
                     {
                         Console.Clear();
                         Beacon targetBeacon = localBeacons[chosenIdx];
-
+                        Program.communicatingBeacon = targetBeacon;
+                        targetBeacon.GetOutput(true);
                         do
                         {
                             Console.Write("beacon> ");
@@ -80,6 +81,7 @@ namespace TeamServer.Menu
                     }
                 }
 
+                Program.communicatingBeacon = null;
                 Display();
                 return;
             }, true));

@@ -17,6 +17,7 @@
 
 core* core::instance = NULL;
 bool core::terminated = false;
+int core::sleepTime = 5;
 //Communicator *core::communicator = NULL;
 
 core::core() {
@@ -81,6 +82,7 @@ std::string core::execute_command(std::string cmd){
 		cmd = cmd.substr(11, cmd.size() - 11);
 		return this->execute_powershell(cmd);
 	}
+	return "";
 }
 
 

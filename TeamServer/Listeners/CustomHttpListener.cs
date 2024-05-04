@@ -77,8 +77,10 @@ namespace TeamServer.Listeners
                                 {
                                     // we will assume a JSON structure: {"output": "STDOUT output from beacon"}
                                     string body = new StreamReader(context.Request.InputStream).ReadToEnd();
+                                    byte[] decodedBody = Convert.FromBase64String(body);
+                                    string decodedString = System.Text.Encoding.UTF8.GetString(decodedBody);
 
-                                    ((IListener)this).AddBeaconOutput(id, body);
+                                    ((IListener)this).AddBeaconOutput(id, decodedString);
 
                                     byte[] b = Encoding.UTF8.GetBytes("ACK");
                                     context.Response.StatusCode = 200;

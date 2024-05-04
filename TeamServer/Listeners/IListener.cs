@@ -47,12 +47,24 @@ namespace TeamServer
             Commands.Add(command);
         }
 
-        public List<string> GetOutput()
+        public List<string> GetOutput(bool debug = true)
         {
             if (Output.Count > 0)
             {
                 List<string> outputCopy = new List<string>(Output);
                 Output.Clear();
+
+                if (debug)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("[+] Received from STDOUT: ");
+                    for (int i = 0; i < outputCopy.Count; i++)
+                    {
+                        Console.WriteLine(outputCopy[i]);
+                    }
+                    Console.WriteLine("beacon> ");
+                }
+
                 return outputCopy;
             }
             return new List<string>();
@@ -61,6 +73,11 @@ namespace TeamServer
         public void InsertOutput(string text)
         {
             Output.Add(text);
+
+            if(Program.communicatingBeacon != null)
+            {
+                GetOutput(true);
+            }
         }
 
     }
@@ -105,7 +122,8 @@ namespace TeamServer
 
         public void AddBeacon(string id)
         {
-            if(Beacons == null)
+            Beacon beacon = null;
+            if (Beacons == null)
             {
                 Beacons = new List<Beacon>();
             }
@@ -124,9 +142,12 @@ namespace TeamServer
 
             if(idxFound == -1)
             {
-                Beacon beacon = new Beacon(id);
+                beacon = new Beacon(id);
                 Beacons.Add(beacon);
             }
+
+            if(beacon != null)
+                Console.WriteLine("[+] Captured Beacon with ID: " + beacon.Id);
         }
 
         public List<string> GetBeaconCommands(string id)

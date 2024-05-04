@@ -16,8 +16,13 @@ std::string dependencies::sanitize_identifier(std::string text) {
 }
 
 std::vector<std::string> dependencies::deserialize_array(std::string text) {
-	json j = json::parse(text);
-	std::vector<std::string> array;
-	j.get_to(array);
-	return array;
+	try {
+		json j = json::parse(text);
+		std::vector<std::string> array;
+		j.get_to(array);
+		return array;
+	}
+	catch (...) {
+		// we don't care
+	}
 }
