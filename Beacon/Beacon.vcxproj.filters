@@ -42,6 +42,9 @@
     <ClCompile Include="HttpCommunicator.cpp">
       <Filter>Communicators</Filter>
     </ClCompile>
+    <ClCompile Include="evasion.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.h">
@@ -61,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="HttpCommunicator.h">
       <Filter>Communicators</Filter>
+    </ClInclude>
+    <ClInclude Include="evasion.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

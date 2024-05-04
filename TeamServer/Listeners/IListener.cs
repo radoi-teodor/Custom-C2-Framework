@@ -62,7 +62,7 @@ namespace TeamServer
                     {
                         Console.WriteLine(outputCopy[i]);
                     }
-                    Console.WriteLine("beacon> ");
+                    Console.Write("beacon> ");
                 }
 
                 return outputCopy;

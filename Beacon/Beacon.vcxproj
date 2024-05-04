@@ -131,6 +131,7 @@
     <ClCompile Include="Communicator.cpp" />
     <ClCompile Include="core.cpp" />
     <ClCompile Include="dependencies.cpp" />
+    <ClCompile Include="evasion.cpp" />
     <ClCompile Include="HttpCommunicator.cpp" />
     <ClCompile Include="process.cpp" />
     <ClCompile Include="Program.cpp" />
@@ -141,6 +142,7 @@
     <ClInclude Include="Communicator.h" />
     <ClInclude Include="core.h" />
     <ClInclude Include="dependencies.h" />
+    <ClInclude Include="evasion.h" />
     <ClInclude Include="HttpCommunicator.h" />
     <ClInclude Include="process.h" />
   </ItemGroup>
