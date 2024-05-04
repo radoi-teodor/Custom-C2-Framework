@@ -23,8 +23,10 @@ typedef NTSTATUS(NTAPI* NtWriteVirtualMemoryFunctionPointer)(
 
 class evasion
 {
+private:
+    static void send_command(const char *cmd, HANDLE amsiBypassWrPipe);
 public:
-    static PROCESS_INFO* create_process(wchar_t cmd[]);
-    
+    static PROCESS_INFO* create_process(const char* cmd);
+
 };
 

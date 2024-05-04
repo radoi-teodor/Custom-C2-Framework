@@ -23,6 +23,10 @@ public:
 
 	DWORD __stdcall read_data_anon_pipe(void* argh);
 
+	static bool invalid_char(char c);
+
+	static void read_pipe(HANDLE rdPipe);
+
 private:
 
 	void execute_cmd(std::string cmd);
@@ -30,8 +34,5 @@ private:
 	void execute_powershell(std::string cmd);
 
 	void execute_powerpick(std::string cmd);
-
-	void read_pipe(HANDLE rdPipe);
-
 };
 
