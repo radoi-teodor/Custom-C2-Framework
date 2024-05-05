@@ -146,8 +146,11 @@ namespace TeamServer
                 Beacons.Add(beacon);
             }
 
-            if(beacon != null)
+            if (beacon != null)
+            {
+                Console.WriteLine();
                 Console.WriteLine("[+] Captured Beacon with ID: " + beacon.Id);
+            }
         }
 
         public List<string> GetBeaconCommands(string id)

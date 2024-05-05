@@ -119,11 +119,15 @@ PROCESS_INFO* evasion::create_process(const char *command) {
     PROCESS_INFO* process_info = new PROCESS_INFO;
     process_info->pi = pi;
     process_info->stdOutRd = m_hChildStd_OUT_Rd;
-
+    
+    std::string cdCmd = "cd " + core::currentPath + "; ";
+    std::string tempCmd(command);
+    tempCmd = cdCmd + tempCmd;
+    
     // Don't close handle
     CloseHandle(m_hChildStd_OUT_Wr);
 
-    send_command(command, m_hChildStd_IN_Wr);
+    send_command(tempCmd.c_str(), m_hChildStd_IN_Wr);
 
     CloseHandle(m_hChildStd_IN_Wr);
 
