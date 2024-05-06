@@ -64,3 +64,23 @@ CreateProcessA(
 );
 hProc = pi->hProcess;
 ```
+# Our Implementation
+AMSI bypass implementation is done in `evasion` class. It will create a new process, open it after creation, then make the memory patching for the two functions:
+- `AmsiScanBuffer`
+- `AmsiOpenSession`
+
+Interesting enough, between the process creation and process opening, we have to wait for one second in order to get the handle with the right permissions:
+```
+if (!success) {
+    std::cout << "[x] CreateProcess failed." << std::endl;
+    return NULL;
+}
+
+Sleep(1000);
+
+hProc = OpenProcess(
+    PROCESS_VM_OPERATION | PROCESS_VM_WRITE,
+    FALSE,
+    pi->dwProcessId
+);
+```

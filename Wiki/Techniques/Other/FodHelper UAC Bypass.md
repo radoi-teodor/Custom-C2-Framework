@@ -1,0 +1,1 @@
+First of all, for any Windows API usage, check this [chromium code](https://chromium.googlesource.com/chromium/src/+/66.0.3359.158/base/process/process_info_win.cc), it has a lot for examples of how to use several token functions.
