@@ -1,6 +1,7 @@
 #pragma once
 #include<string>
 #include "Windows.h"
+#include "process.h"
 //#include "Communicator.h"
 
 class core
@@ -9,6 +10,7 @@ class core
 public:
 	static core* instance;
 	static bool terminated;
+	static PROCESS_INFO* persistent_process;
 	static std::string currentPath;
 	static int sleepTime;
 	//static Communicator *communicator;
@@ -26,6 +28,8 @@ public:
 	static bool invalid_char(char c);
 
 	static void read_pipe(HANDLE rdPipe);
+
+	static void read_pipe_once(HANDLE rdPipe);
 
 private:
 

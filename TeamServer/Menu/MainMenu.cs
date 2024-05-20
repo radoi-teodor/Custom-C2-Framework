@@ -30,11 +30,14 @@ namespace TeamServer.Menu
                 List<Beacon> localBeacons = new List<Beacon>();
                 foreach (IListener listener in Program.listeners)
                 {
-                    foreach (Beacon beacon in listener.Beacons)
+                    if (listener.Beacons != null && listener.Beacons.Count > 0)
                     {
-                        Console.WriteLine(idx.ToString() + ". " + beacon.Id);
-                        localBeacons.Add(beacon);
-                        idx++;
+                        foreach (Beacon beacon in listener.Beacons)
+                        {
+                            Console.WriteLine(idx.ToString() + ". " + beacon.Id);
+                            localBeacons.Add(beacon);
+                            idx++;
+                        }
                     }
                 }
 

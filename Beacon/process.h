@@ -9,7 +9,8 @@ struct PROCESSES {
 
 struct PROCESS_INFO {
 	PPROCESS_INFORMATION pi;
-	HANDLE stdOutRd;
+	HANDLE stdIn;
+	HANDLE stdOut;
 };
 
 class process

