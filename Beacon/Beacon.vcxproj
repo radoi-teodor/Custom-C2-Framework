@@ -133,7 +133,6 @@
     <ClCompile Include="dependencies.cpp" />
     <ClCompile Include="evasion.cpp" />
     <ClCompile Include="HttpCommunicator.cpp" />
-    <ClCompile Include="process.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="win-api-process-inclusions.h" />
   </ItemGroup>
@@ -144,7 +143,6 @@
     <ClInclude Include="dependencies.h" />
     <ClInclude Include="evasion.h" />
     <ClInclude Include="HttpCommunicator.h" />
-    <ClInclude Include="process.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

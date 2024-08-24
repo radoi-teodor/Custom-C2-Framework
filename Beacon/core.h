@@ -1,8 +1,13 @@
 #pragma once
 #include<string>
 #include "Windows.h"
-#include "process.h"
-//#include "Communicator.h"
+
+#pragma once
+struct PROCESS_INFO {
+	PPROCESS_INFORMATION pi;
+	HANDLE stdIn;
+	HANDLE stdOut;
+};
 
 class core
 {
@@ -11,7 +16,7 @@ public:
 	static core* instance;
 	static bool terminated;
 	static PROCESS_INFO* persistent_process;
-	static std::string currentPath;
+
 	static int sleepTime;
 	//static Communicator *communicator;
 	std::string identifier = ""; // this will be the identifier used by teamserver to distinct different beacons
@@ -23,8 +28,6 @@ public:
 	// NOTE: cmd is not the actual command for CMD.exe or POWERSHELL.exe, but the command ready to be processed by beacon
 	void execute_command(std::string cmd);
 
-	DWORD __stdcall read_data_anon_pipe(void* argh);
-
 	static bool invalid_char(char c);
 
 	static void read_pipe(HANDLE rdPipe);
@@ -32,11 +35,5 @@ public:
 	static void read_pipe_once(HANDLE rdPipe);
 
 private:
-
-	void execute_cmd(std::string cmd);
-
-	void execute_powershell(std::string cmd);
-
-	void execute_powerpick(std::string cmd);
 };
 

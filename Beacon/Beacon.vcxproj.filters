@@ -30,9 +30,6 @@
     <ClCompile Include="base64.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="process.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="dependencies.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
@@ -54,9 +51,6 @@
       <Filter>Communicators</Filter>
     </ClInclude>
     <ClInclude Include="base64.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="process.h">
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="dependencies.h">

