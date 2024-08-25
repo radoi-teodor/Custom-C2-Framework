@@ -86,6 +86,8 @@ namespace TeamServer
     {
 
         public List<Beacon> Beacons { get; set; }
+        public string Ip { get; set; }
+        public int Port { get; set; }
 
         public void AddBeaconOutput(string id, string output)
         {

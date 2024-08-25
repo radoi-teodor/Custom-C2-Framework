@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 
-
 void Communicator::get_commands() {
 	// TO BE IMPLEMENTED IN CHILD CLASSES
 }

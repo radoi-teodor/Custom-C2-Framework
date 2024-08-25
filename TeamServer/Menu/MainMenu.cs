@@ -69,14 +69,11 @@ namespace TeamServer.Menu
                             Console.Write("beacon> ");
                             string command = Console.ReadLine();
 
-                            if(command != "bg" && command != "background")
-                            {
-                                targetBeacon.InsertCommand(command);
-                            }
-                            else
+                            if(!BeaconOperations.HandleOperation(targetBeacon, command))
                             {
                                 break;
                             }
+
                         } while (true);
                     }catch(Exception e)
                     {

