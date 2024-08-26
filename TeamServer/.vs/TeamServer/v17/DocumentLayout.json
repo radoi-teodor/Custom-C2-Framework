@@ -46,8 +46,7 @@
               "RelativeToolTip": "config.json",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAEAAABqAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-08-25T12:49:23.256Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-25T12:49:23.256Z"
             },
             {
               "$type": "Document",
@@ -59,8 +58,7 @@
               "RelativeToolTip": "Menu\\MainMenu.cs",
               "ViewState": "AQIAAJIAAAAAAAAAAAAuwH0AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-25T12:35:19.112Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-25T12:35:19.112Z"
             },
             {
               "$type": "Document",
@@ -70,7 +68,7 @@
               "RelativeDocumentMoniker": "Listeners\\CustomHttpListener.cs",
               "ToolTip": "C:\\Users\\tradoi\\Documents\\Code\\Mine\\Custom-C2-Framework\\TeamServer\\Listeners\\CustomHttpListener.cs",
               "RelativeToolTip": "Listeners\\CustomHttpListener.cs",
-              "ViewState": "AQIAAHQAAAAAAAAAAAArwIEAAAAlAAAA",
+              "ViewState": "AQIAAD4AAAAAAAAAAAArwIEAAAAlAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-25T09:46:50.339Z",
               "EditorCaption": ""
@@ -85,8 +83,7 @@
               "RelativeToolTip": "Utils\\BeaconOperations.cs",
               "ViewState": "AQIAACAAAAAAAAAAAAAcwCQAAABgAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-25T09:39:14.636Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-25T09:39:14.636Z"
             },
             {
               "$type": "Document",
@@ -98,8 +95,7 @@
               "RelativeToolTip": "Utils\\BinaryUtils.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAA1AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-25T09:10:46.123Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-25T09:10:46.123Z"
             },
             {
               "$type": "Document",
@@ -111,8 +107,7 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAAVAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-20T16:45:26.137Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-20T16:45:26.137Z"
             }
           ]
         }
