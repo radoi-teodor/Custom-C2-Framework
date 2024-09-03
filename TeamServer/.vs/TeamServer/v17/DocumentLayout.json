@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\tradoi\\Documents\\Code\\Mine\\Custom-C2-Framework\\TeamServer\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{6D9649BE-4698-4CD0-A64E-B20DE48F165F}|TeamServer.csproj|c:\\users\\tradoi\\documents\\code\\mine\\custom-c2-framework\\teamserver\\menu\\mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6D9649BE-4698-4CD0-A64E-B20DE48F165F}|TeamServer.csproj|solutionrelative:menu\\mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6D9649BE-4698-4CD0-A64E-B20DE48F165F}|TeamServer.csproj|c:\\users\\tradoi\\documents\\code\\mine\\custom-c2-framework\\teamserver\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6D9649BE-4698-4CD0-A64E-B20DE48F165F}|TeamServer.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{6D9649BE-4698-4CD0-A64E-B20DE48F165F}|TeamServer.csproj|c:\\users\\tradoi\\documents\\code\\mine\\custom-c2-framework\\teamserver\\listeners\\customhttplistener.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6D9649BE-4698-4CD0-A64E-B20DE48F165F}|TeamServer.csproj|solutionrelative:listeners\\customhttplistener.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -13,18 +21,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{6D9649BE-4698-4CD0-A64E-B20DE48F165F}|TeamServer.csproj|c:\\users\\tradoi\\documents\\code\\mine\\custom-c2-framework\\teamserver\\utils\\binaryutils.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6D9649BE-4698-4CD0-A64E-B20DE48F165F}|TeamServer.csproj|solutionrelative:utils\\binaryutils.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D9649BE-4698-4CD0-A64E-B20DE48F165F}|TeamServer.csproj|c:\\users\\tradoi\\documents\\code\\mine\\custom-c2-framework\\teamserver\\config.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{6D9649BE-4698-4CD0-A64E-B20DE48F165F}|TeamServer.csproj|solutionrelative:config.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D9649BE-4698-4CD0-A64E-B20DE48F165F}|TeamServer.csproj|c:\\users\\tradoi\\documents\\code\\mine\\custom-c2-framework\\teamserver\\menu\\mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D9649BE-4698-4CD0-A64E-B20DE48F165F}|TeamServer.csproj|solutionrelative:menu\\mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6D9649BE-4698-4CD0-A64E-B20DE48F165F}|TeamServer.csproj|c:\\users\\tradoi\\documents\\code\\mine\\custom-c2-framework\\teamserver\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6D9649BE-4698-4CD0-A64E-B20DE48F165F}|TeamServer.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,48 +30,50 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "config.json",
-              "DocumentMoniker": "C:\\Users\\tradoi\\Documents\\Code\\Mine\\Custom-C2-Framework\\TeamServer\\config.json",
-              "RelativeDocumentMoniker": "config.json",
-              "ToolTip": "C:\\Users\\tradoi\\Documents\\Code\\Mine\\Custom-C2-Framework\\TeamServer\\config.json",
-              "RelativeToolTip": "config.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAEAAABqAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-08-25T12:49:23.256Z"
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\tradoi\\Documents\\Code\\Mine\\Custom-C2-Framework\\TeamServer\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\tradoi\\Documents\\Code\\Mine\\Custom-C2-Framework\\TeamServer\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAqwAoAAAAwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-20T16:45:26.137Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
               "Title": "MainMenu.cs",
               "DocumentMoniker": "C:\\Users\\tradoi\\Documents\\Code\\Mine\\Custom-C2-Framework\\TeamServer\\Menu\\MainMenu.cs",
               "RelativeDocumentMoniker": "Menu\\MainMenu.cs",
               "ToolTip": "C:\\Users\\tradoi\\Documents\\Code\\Mine\\Custom-C2-Framework\\TeamServer\\Menu\\MainMenu.cs",
               "RelativeToolTip": "Menu\\MainMenu.cs",
-              "ViewState": "AQIAAJIAAAAAAAAAAAAuwH0AAAAAAAAA",
+              "ViewState": "AQIAAFkAAAAAAAAAAAAqwGkAAAAVAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-25T12:35:19.112Z"
+              "WhenOpened": "2024-08-25T12:35:19.112Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "CustomHttpListener.cs",
               "DocumentMoniker": "C:\\Users\\tradoi\\Documents\\Code\\Mine\\Custom-C2-Framework\\TeamServer\\Listeners\\CustomHttpListener.cs",
               "RelativeDocumentMoniker": "Listeners\\CustomHttpListener.cs",
               "ToolTip": "C:\\Users\\tradoi\\Documents\\Code\\Mine\\Custom-C2-Framework\\TeamServer\\Listeners\\CustomHttpListener.cs",
               "RelativeToolTip": "Listeners\\CustomHttpListener.cs",
-              "ViewState": "AQIAAD4AAAAAAAAAAAArwIEAAAAlAAAA",
+              "ViewState": "AQIAAC8AAAAAAAAAAAAuwEcAAAA5AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-25T09:46:50.339Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "BeaconOperations.cs",
               "DocumentMoniker": "C:\\Users\\tradoi\\Documents\\Code\\Mine\\Custom-C2-Framework\\TeamServer\\Utils\\BeaconOperations.cs",
               "RelativeDocumentMoniker": "Utils\\BeaconOperations.cs",
@@ -87,7 +85,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "BinaryUtils.cs",
               "DocumentMoniker": "C:\\Users\\tradoi\\Documents\\Code\\Mine\\Custom-C2-Framework\\TeamServer\\Utils\\BinaryUtils.cs",
               "RelativeDocumentMoniker": "Utils\\BinaryUtils.cs",
@@ -96,18 +94,6 @@
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAA1AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-25T09:10:46.123Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\tradoi\\Documents\\Code\\Mine\\Custom-C2-Framework\\TeamServer\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\tradoi\\Documents\\Code\\Mine\\Custom-C2-Framework\\TeamServer\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAAVAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-20T16:45:26.137Z"
             }
           ]
         }

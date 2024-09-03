@@ -1,0 +1,2 @@
+﻿  Program.cpp
+LINK : fatal error LNK1201: error writing to program database 'C:\Users\tradoi\Documents\Code\Mine\Custom-C2-Framework\Dropper\x64\Debug\Dropper.pdb'; check for insufficient disk space, invalid path, or insufficient privilege

@@ -18,7 +18,6 @@ namespace TeamServer.Menu
             AddMenuItem(new MenuItem(0, "Start HTTP Listener", new HttpListenerMenu()));
 
             AddMenuItem(new MenuItem(1, "Beacons Captured", () => {
-                int idx = 0;
 
                 if (Program.listeners == null || Program.listeners.Count == 0)
                 {
@@ -27,6 +26,8 @@ namespace TeamServer.Menu
                     return;
                 }
 
+                // collect all beacons
+                int idx = 0;
                 List<Beacon> localBeacons = new List<Beacon>();
                 foreach (IListener listener in Program.listeners)
                 {
@@ -86,7 +87,62 @@ namespace TeamServer.Menu
                 return;
             }, true));
 
-            AddMenuItem(new MenuItem(2, "Exit menu").SetAsExitOption());
+            AddMenuItem(new MenuItem(2, "Remove a Beacon", () => {
+                int selection = 0;
+                try
+                {
+                    bool found = false;
+
+                    foreach (IListener listener in Program.listeners)
+                    {
+                        if (listener.Beacons != null && listener.Beacons.Count > 0)
+                            found = true;
+                    }
+
+                    if (!found)
+                    {
+                        Console.WriteLine("No beacon found.");
+                        return;
+                    }
+
+                    Console.Write("Write beacon IDX: ");
+                    selection = Convert.ToInt32(Console.ReadLine().Trim());
+                    Console.WriteLine();
+
+
+
+                    int idx = 0;
+                    List<Beacon> localBeacons = new List<Beacon>();
+                    foreach (IListener listener in Program.listeners)
+                    {
+                        if (listener.Beacons != null && listener.Beacons.Count > 0)
+                        {
+                            foreach (Beacon beacon in listener.Beacons)
+                            {
+                                if (idx == selection)
+                                {
+                                    localBeacons.Remove(beacon);
+                                    Console.WriteLine("Removed beacon");
+                                    break;
+                                }
+                                localBeacons.Add(beacon);
+                                idx++;
+                            }
+                        }
+                    }
+                    Console.WriteLine("Beacon not found");
+                    return;
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Beacon not found");
+                    return;
+                }
+
+            }));
+
+            AddMenuItem(new MenuItem(3, "Exit menu").SetAsExitOption());
 
             //AddHiddenMenuItem(new MenuItem(3, "Hidden menu item", () => Console.WriteLine("I was a hidden menu item")));
         }
@@ -136,6 +192,7 @@ namespace TeamServer.Menu
                     Console.WriteLine(e.ToString());
                 }
             }));
+
             AddMenuItem(new MenuItem(1, "Exit current menu").SetAsExitOption());
 
         }
@@ -151,6 +208,7 @@ namespace TeamServer.Menu
             AddMenuItem(new MenuItem(0, "Interact with a Beacon", () => {
                 
             }));
+
             AddMenuItem(new MenuItem(1, "Exit current menu").SetAsExitOption());
 
         }
