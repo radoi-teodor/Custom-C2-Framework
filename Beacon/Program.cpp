@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
 		c.identifier = id;
 	}
 
-	HttpCommunicator httpCommunicator("127.0.0.1", 8080);
+	HttpCommunicator httpCommunicator("192.168.45.238", 8080);
 
 	// Hide windows - Show only in debug
 	if (true) {
