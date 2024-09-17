@@ -10,7 +10,8 @@ $foldersToExclude = @(
     "C:\Users\$env:USERNAME\AppData\Local\JetBrains",
     "C:\Program Files\Docker",
     "C:\Program Files\JetBrains",
-    "C:\Users\tradoi\Documents\Code\Mine\Custom-C2-Framework"
+    "C:\Users\$env:USERNAME\Documents\Code\Mine\Custom-C2-Framework",
+    $(Get-Location)
 )
 
 # Add folder exclusions

