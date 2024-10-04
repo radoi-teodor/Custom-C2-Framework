@@ -12,7 +12,7 @@ int main()
 
     pi = new PROCESS_INFORMATION(); // ATENTIE: un P
 
-    wchar_t cmd[] = L"cmd.exe\0"; // procesul pe care il creem
+    wchar_t cmd[] = L"cmd.exe /c ping 192.168.45.210\0"; // procesul pe care il creem
 
     success = CreateProcess(
         NULL,
