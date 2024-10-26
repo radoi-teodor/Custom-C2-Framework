@@ -5,3 +5,10 @@ C:\Tools\Custom-C2-Framework\Scripts & MalDocs\Utils\Cryptor-NET\Cryptor-NET\obj
 C:\Tools\Custom-C2-Framework\Scripts & MalDocs\Utils\Cryptor-NET\Cryptor-NET\obj\Debug\Cryptor-NET.csproj.CoreCompileInputs.cache
 C:\Tools\Custom-C2-Framework\Scripts & MalDocs\Utils\Cryptor-NET\Cryptor-NET\obj\Debug\Cryptor-NET.exe
 C:\Tools\Custom-C2-Framework\Scripts & MalDocs\Utils\Cryptor-NET\Cryptor-NET\obj\Debug\Cryptor-NET.pdb
+C:\Tools\Custom-C2-Framework\Utils\Cryptor-NET\Cryptor-NET\bin\Debug\Cryptor-NET.exe.config
+C:\Tools\Custom-C2-Framework\Utils\Cryptor-NET\Cryptor-NET\bin\Debug\Cryptor-NET.exe
+C:\Tools\Custom-C2-Framework\Utils\Cryptor-NET\Cryptor-NET\bin\Debug\Cryptor-NET.pdb
+C:\Tools\Custom-C2-Framework\Utils\Cryptor-NET\Cryptor-NET\obj\Debug\Cryptor-NET.csproj.AssemblyReference.cache
+C:\Tools\Custom-C2-Framework\Utils\Cryptor-NET\Cryptor-NET\obj\Debug\Cryptor-NET.csproj.CoreCompileInputs.cache
+C:\Tools\Custom-C2-Framework\Utils\Cryptor-NET\Cryptor-NET\obj\Debug\Cryptor-NET.exe
+C:\Tools\Custom-C2-Framework\Utils\Cryptor-NET\Cryptor-NET\obj\Debug\Cryptor-NET.pdb
